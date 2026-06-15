@@ -1,0 +1,8 @@
+## Interface: 30300
+## Title: Guild Codex Raid Signup
+## Notes: Raid signup creator UI for Guild Codex
+## Author: Amdir
+## Version: 1.0.0
+## SavedVariables: GuildCodexRaidSignupDB
+
+GuildCodexRaidSignup.lua
