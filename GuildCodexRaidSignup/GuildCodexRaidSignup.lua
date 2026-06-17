@@ -71,7 +71,21 @@ local function SplitTabs(s)
 end
 
 local function SendToServer(payload)
-    SendAddonMessage(APP_PREFIX, payload, "WHISPER", UnitName("player"))
+    payload = tostring(payload or "")
+
+    -- У 3.3.5 addon-message бажано тримати коротким.
+    -- Якщо payload занадто довгий, краще не слати битий/обрізаний пакет.
+    if string.len(payload) > 240 then
+        Notice("Запит до сервера занадто довгий: " .. tostring(string.len(payload)) .. " байт.", 1, 0.25, 0.25)
+        return
+    end
+
+    local playerName = UnitName("player")
+    if not playerName or playerName == "" then
+        return
+    end
+
+    SendAddonMessage(APP_PREFIX, payload, "WHISPER", playerName)
 end
 
 local function Notice(text, r, g, b)
@@ -956,6 +970,11 @@ local function HandlePayload(message)
 end
 
 local ev = CreateFrame("Frame")
+
+if RegisterAddonMessagePrefix then
+    RegisterAddonMessagePrefix(APP_PREFIX)
+end
+
 ev:RegisterEvent("PLAYER_LOGIN")
 ev:RegisterEvent("CHAT_MSG_ADDON")
 ev:RegisterEvent("CHAT_MSG_WHISPER")
